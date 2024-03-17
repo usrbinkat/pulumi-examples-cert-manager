@@ -1,0 +1,10 @@
+name: pulumi-python-cert-manager-demo
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: troubleshooting cert-manager clusterissuer secret data extraction
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: https://www.pulumi.com/ai/api/project/0f00ffb3-d70e-4f06-bd14-8e69f7d60038.zip

@@ -1,38 +1,28 @@
-# Pulumi Dev Container
+# Pulumi Cert Manager Exercise
 
-[![License](https://img.shields.io/github/license/usrbinkat/iac-mesh-pac)]() [![Pulumi](https://img.shields.io/badge/pulumi-v3.102.0-blueviolet)](https://www.pulumi.com/docs/get-started/install/) [![Kubectl](https://img.shields.io/badge/kubectl-v1.26.13-blueviolet)](https://kubernetes.io/docs/tasks/tools/install-kubectl/) [![Docker](https://img.shields.io/badge/docker-v25.0.0-blueviolet)](https://docs.docker.com/get-docker/) [![Kind](https://img.shields.io/badge/kind-v0.20.0-blueviolet)](https://kind.sigs.k8s.io/docs/user/quick-start/) [![Helm](https://img.shields.io/badge/helm-v3.14.0-blueviolet)](https://helm.sh/docs/intro/install/)
+[![License](https://img.shields.io/github/license/usrbinkat/iac-mesh-pac)]() [![Pulumi](https://img.shields.io/badge/pulumi-v3.107.0-blueviolet)](https://www.pulumi.com/docs/get-started/install/) [![Kubectl](https://img.shields.io/badge/kubectl-v1.29.2-blueviolet)](https://kubernetes.io/docs/tasks/tools/install-kubectl/) [![Kind](https://img.shields.io/badge/kind-v0.22.0-blueviolet)](https://kind.sigs.k8s.io/docs/user/quick-start/) [![Docker](https://img.shields.io/badge/docker-v25.0.3-blueviolet)](https://docs.docker.com/get-docker/)
 
-[![Pulumi Devcontainer Build Status](https://github.com/pulumi/devcontainer/actions/workflows/build.yaml/badge.svg)](https://github.com/pulumi/devcontainer/actions/workflows/build.yaml)
+> Powered by the [Pulumi Devcontainer](https://code.visualstudio.com/docs/devcontainers/containers)
+>
+> ![Devcontainer](.github/assets/devcontainer.png)
+>
+> [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/usrbinkat/pulumi-examples-cert-manager)
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://bit.ly/pulumi-devcontainer-codespaces)
+## About
 
-This is a [Github Template Repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template) which provides a Pulumi [Devcontainer](https://code.visualstudio.com/docs/devcontainers/containers) together with GitOps ready boilerplate for quickly starting new Pulumi IaC projects.
+This repo contains a testing environment and exercise for exploring [cert-manager] `ClusterIssuer` certificate resource creation and using Pulumi's [intputs/outputs & Apply](https://www.pulumi.com/docs/concepts/inputs-outputs/apply) methods to extract secret data values as variables for use in subsequent resources and as Pulumi stack outputs for consumption by other stacks.
 
-The Pulumi [Devcontainer](https://code.visualstudio.com/docs/devcontainers/containers) is designed with deep [VS Code](https://code.visualstudio.com) and [Github Codespaces](https://github.com/features/codespaces) integration to streamline a common Pulumi IaC and Provider development environment. dependencies and prerequisites as much as possible using [Dev Containers](https://containers.dev/) to prepare your development environment, or even just run your development directly in the browser with [Github CodeSpaces](https://github.com/features/codespaces).
-![Devcontainer](.github/assets/devcontainer.png)
-![CodeSpaces Screenshot](./.github/assets/codespaces.png)
+[cert-manager]: https://cert-manager.io
 
-# Getting Started
+## Getting Started
 
-With multiple ways to get started, it is a good idea to briefly review:
+Launch this exercise in GitHub Codespaces with the 'Open in GitHub Codespaces' button above, or git clone locally and open with VSCode + Remote Containers VSCode Extension + Docker Desktop.
 
-- [Pulumi Dev Container](#pulumi-dev-container)
-- [Getting Started](#getting-started)
-- [Github CodeSpaces](#github-codespaces)
-  - [First time setup](#first-time-setup)
-- [VS Code Dev Container](#vs-code-dev-container)
-- [Git Submodule](#git-submodule)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/usrbinkat/pulumi-examples-cert-manager)
 
-# Github CodeSpaces
+Codespaces is the easiest way to get started quickly. Simply click the button above to open this repository in a new Codespace and then continue from [Setup](#first-time-setup) instructions below.
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/pulumi/devcontainer?quickstart=1)
-
-Codespaces is the easiest way to get started quickly. Simply click the button above to open this repository in a new Codespace and then follow the [First time setup](#first-time-setup) instructions below.
-
-> Fig 1. How to open project in CodeSpaces
-![How to open repository in CodeSpaces](./.github/assets/gh-open-codespaces.png)
-
-## First time setup
+## Setup
 
 1. Pulumi Login
 
@@ -40,39 +30,33 @@ Codespaces is the easiest way to get started quickly. Simply click the button ab
 pulumi login
 ```
 
-> Fig 2.b pulumi login
-![Pulumi login](./.github/assets/pulumi-login.png)
-![Pulumi login complete](./.github/assets/pulumi-login-complete.png)
-
 2. Create a new stack
 
 ```bash
-pulumi new
-pulumi stack init
+pulumi stack select --create dev
 ```
 
-# VS Code Dev Container
-
-To use the Dev Container in VS Code, you will need to install the [Remote - Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension, and follow the [official tutorial here](https://code.visualstudio.com/docs/devcontainers/tutorial) to begin.
-
-# Git Submodule
-
-The pulumi Dev Container repository can be added as a submodule to an existing project to provide an easy and consistent development environment that is maintained upstream.
-
-To add this repository as a submodule to your project, run the following commands:
+3. Create a Kind Kubernetes Cluster
 
 ```bash
-git submodule add https://github.com/pulumi/devcontainer .github/devcontainer
-git submodule update --init --recursive .github/devcontainer
-mkdir -p .devcontainer
-rsync -av .github/devcontainer/devcontainer/* .devcontainer
+make kind
 ```
 
-To update the devcontainer submodule in consuming repos:
+4. Deploy Pulumi IaC
 
 ```bash
-git submodule update --remote --merge .github/devcontainer
-rsync -av .github/devcontainer/devcontainer/* .devcontainer
+# If this fails on the first try due to CRD deployment timing re-try once or twice
+pulumi up --refresh=true --skip-preview --yes
 ```
 
-After the submodule is added, you can open your project in VS Code and it will automatically detect the Dev Container configuration and prompt you to open the project in a container, or you can open the project in Github CodeSpaces.
+5. Play with your new secret and pulumi outputs
+
+```bash
+# Kubectl get your certificate secret
+kubectl get secret -ojson example.com
+
+# Pulumi outputs
+pulumi stack output ca_crt --show-secrets | base64 -d
+pulumi stack output tls_crt --show-secrets | base64 -d
+pulumi stack output tls_key --show-secrets | base64 -d
+```
