@@ -6,7 +6,6 @@
 
 This repo contains a testing environment and exercise for exploring [cert-manager] `ClusterIssuer` certificate resource creation and using Pulumi's [intputs/outputs & Apply](https://www.pulumi.com/docs/concepts/inputs-outputs/apply) methods to extract secret data values as variables for use in subsequent resources and as Pulumi stack outputs for consumption by other stacks.
 
->
 > [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/usrbinkat/pulumi-examples-cert-manager)
 >
 > ![Devcontainer](.github/assets/devcontainer.png)
@@ -30,23 +29,23 @@ Codespaces is the easiest way to get started quickly. Simply click the button ab
 pulumi login && pulumi install
 ```
 
-2. Create a new stack
-
-```bash
-pulumi stack select --create dev
-```
-
-3. Create a Kind Kubernetes Cluster
+2. Create a Kind Kubernetes Cluster
 
 ```bash
 make kind
+```
+
+3. Create a new stack
+
+```bash
+pulumi stack select --create dev
 ```
 
 4. Deploy Pulumi IaC
 
 ```bash
 # If this fails on the first try due to CRD deployment timing re-try once or twice
-pulumi up --refresh=true --skip-preview --yes
+pulumi up --skip-preview
 ```
 
 5. Play with your new secret and pulumi outputs
