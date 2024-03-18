@@ -1,4 +1,4 @@
-name: pulumi-python-cert-manager-demo
+name: pulumi-examples-cert-manager
 runtime:
   name: python
   options:
